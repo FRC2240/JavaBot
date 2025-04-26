@@ -6,6 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
+// anything that uses the interface must provide methods
 public interface Vision_IO_Base {
     // AdvantageKit logging
     @AutoLog
@@ -18,8 +19,8 @@ public interface Vision_IO_Base {
     }
 
     // a record is like an array
-    //rot x and y are pitch and yaw i think
-    public static record rotation(Rotation2d rot_x, Rotation2d rot_y){}
+    // rot x and y are pitch and yaw i think
+    public static record rotation(Rotation2d rot_x, Rotation2d rot_y) {}
 
     // data taken every 1/20th of a second to estimate position
     public static record pose_estimation_data(
@@ -36,7 +37,7 @@ public interface Vision_IO_Base {
         METATAG_2,
         PHOTOVISION
     }
-    
+
     //creates default method for interface calling object using interface runs method
     public default void update_inputs(Vision_IO_Base_Input inputs){}
 }
