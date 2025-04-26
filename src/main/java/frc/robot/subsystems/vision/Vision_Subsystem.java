@@ -3,6 +3,6 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class vision_subsystem extends SubsystemBase {
+public class Vision_Subsystem extends SubsystemBase {
     
 }
