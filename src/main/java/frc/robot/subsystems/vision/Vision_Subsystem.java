@@ -1,6 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.vision.Vision_IO_Base.Vision_IO_Base_Input;
 
 import java.util.function.Consumer;
@@ -35,6 +36,10 @@ public class Vision_Subsystem extends SubsystemBase {
         this.input = new Vision_IO_Base_Input[IO_Base.length];
 
     }
+
+    public void periodic(){
+        
+    } 
 
 
     //marks a function interface 

@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //import java.util.function.Supplier;
 //import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +25,7 @@ public class Vision_IO_Real_Limelight implements Vision_IO_Base {
 
     // publisher sends data in/on a topic which works like a channel subscriber on
     // same topic receives it
-    private final DoubleArrayPublisher orientationPublisher;
+    private final DoubleArrayPublisher orientation_publisher;
 
     private final DoubleSubscriber latency_subscriber;
     private final DoubleSubscriber rot_x_subscriber;
@@ -35,7 +36,7 @@ public class Vision_IO_Real_Limelight implements Vision_IO_Base {
     public Vision_IO_Real_Limelight(String name, Supplier<Rotation2d> rotation_supplier) {
         var table = NetworkTableInstance.getDefault().getTable(name);
         this.rotation_supplier = rotation_supplier;
-        orientationPublisher = table.getDoubleArrayTopic("robot orientation set").publish();
+        orientation_publisher = table.getDoubleArrayTopic("robot orientation set").publish();
 
         latency_subscriber = table.getDoubleTopic("latency").subscribe(0.0);
         rot_x_subscriber = table.getDoubleTopic("rot_x").subscribe(0.0);
@@ -57,11 +58,20 @@ public class Vision_IO_Real_Limelight implements Vision_IO_Base {
         // in a linked list each index is call in order and leads to the next
         List<pose_estimation_data> pose_estimation_data = new LinkedList<>();
 
+        //publisher sends to network table
+        //.get gets stored function
+        orientation_publisher.accept (new double[] {rotation_supplier.get().getDegrees()});
+        
+        // updates network table
+        NetworkTableInstance.getDefault().flush();
+
         // for each bit of raw data that has changed since the last call
         for (var raw_data : metatag2Subscriber.readQueue()) {
             if (raw_data.value.length == 0)
                 continue;
-            // for
+            for (int i = 1; i < raw_data.value.length; i++){
+                
+            }
 
             // .add() appends to list
             pose_estimation_data.add(
