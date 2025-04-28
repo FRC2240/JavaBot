@@ -1,7 +1,7 @@
 package frc;
 
 public class Constants {
-    public static final mode current_mode = mode.SIM;
+    public static final mode current_mode = mode.REAL;
 
     public static enum mode{
         REAL,

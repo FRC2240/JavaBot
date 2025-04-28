@@ -25,7 +25,7 @@ public interface Vision_IO_Base {
     public static record pose_estimation_data(
         double timestamp,
         // assuming how confident it is in the estimate
-        double confidence,
+        double uncertainty,
         int april_tag_count,
         double average_tag_distance,
         Pose3d position,
