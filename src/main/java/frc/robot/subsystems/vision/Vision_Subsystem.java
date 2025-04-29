@@ -100,6 +100,18 @@ public class Vision_Subsystem extends SubsystemBase {
                 }
 
                 // calculate stdev
+                double stdev_factor = Math.pow(estimation.average_tag_distance(), 2.0)/estimation.april_tag_count();
+
+
+                
+                //sends vision data
+                /*
+                consumer.accepts(
+                    estimation.position(),
+                    estimation.timestamp(),
+                    temp
+                );
+                */
 
             }
 
