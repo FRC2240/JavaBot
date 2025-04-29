@@ -56,11 +56,13 @@ public class Vision_Subsystem extends SubsystemBase {
             // Logger.processInputs("Vision", input[i]);
         }
 
-        List<Pose3d> all_tag_poses = new LinkedList<>();
-        List<Pose3d> all_robot_poses = new LinkedList<>();
-        List<Pose3d> all_accepted_poses = new LinkedList<>();
-        List<Pose3d> all_rejected_poses = new LinkedList<>();
+        // stores data for all cameras
+        List<Pose3d> all_tag_poses = new LinkedList<>(); // position of all tags seen
+        List<Pose3d> all_robot_poses = new LinkedList<>(); // all calculated robot poses
+        List<Pose3d> all_accepted_poses = new LinkedList<>(); // all accepted (reasonable) positions
+        List<Pose3d> all_rejected_poses = new LinkedList<>(); // all rejected (outside theshold unrealistic)
 
+        // does a bunch of suff for each camera
         for (int i = 0; i < IO_base.length; i++) {
 
             List<Pose3d> tag_poses = new LinkedList<>();
@@ -68,7 +70,7 @@ public class Vision_Subsystem extends SubsystemBase {
             List<Pose3d> accepted_poses = new LinkedList<>();
             List<Pose3d> rejected_poses = new LinkedList<>();
 
-            // each tag ID appends its position to tag poses
+            // each tag seen ID appends its position to tag poses
             for (int tag_ID : input[i].april_tag_IDs) {
                 var tag_pose = Vision_Constants.april_tag_layout.getTagPose(tag_ID);
                 if (tag_pose.isPresent()) {
@@ -76,17 +78,49 @@ public class Vision_Subsystem extends SubsystemBase {
                 }
             }
 
-            //confirms estimation data is with in thresholds
-            //example has many unecissary seeming conditions
-            //come back to
-            //potential point of failure
+            //
             for (var estimation : input[i].pose_estimation_data) {
-                boolean reject_pose = 
-                        estimation.april_tag_count() == 0 //rejects estimates made without tags
-                        || (estimation.april_tag_count() == 1 && estimation.uncertainty() > Vision_Constants.max_uncertainty);
+                // confirms estimation data is with in thresholds
+                // example has many unecissary seeming conditions
+                // come back to
+                // potential point of failure
+                boolean reject_pose = estimation.april_tag_count() == 0 // rejects estimates made without tags
+                        || (estimation.april_tag_count() == 1
+                                && estimation.uncertainty() > Vision_Constants.max_uncertainty);
+
+                robot_poses.add(estimation.position()); // stores all robot positions for a camera
+                if (!reject_pose) {
+                    accepted_poses.add(estimation.position()); // stores only accepted poses
+                } else {
+                    rejected_poses.add(estimation.position()); // stores onlt rejected poses
+                }
+
+                if (reject_pose) {
+                    continue; // skips to next loop
+                }
+
+                // calculate stdev
+
             }
-            
+
+            // stores data for each camera
+            all_tag_poses.addAll(tag_poses);
+            all_robot_poses.addAll(robot_poses);
+            all_accepted_poses.addAll(accepted_poses);
+            all_rejected_poses.addAll(rejected_poses);
+
         }
+
+        // logs data
+
+        Logger.recordOutput("Vision/tag_positions",
+                all_tag_poses.toArray(new Pose2d[all_tag_poses.size()]));
+        Logger.recordOutput("Vision/robot_positions",
+                all_robot_poses.toArray(new Pose2d[all_tag_poses.size()]));
+        Logger.recordOutput("Vision/accepted_positions",
+                all_accepted_poses.toArray(new Pose2d[all_tag_poses.size()]));
+        Logger.recordOutput("Vision/rejected_positions",
+                all_rejected_poses.toArray(new Pose2d[all_tag_poses.size()]));
     }
 
     // marks a function interface
@@ -98,8 +132,7 @@ public class Vision_Subsystem extends SubsystemBase {
                 double timestamp,
                 Pose2d robot_pose,
                 // how much uncertainty there is
-                // <N3, N1> assumedly gives 3 standerd deviations or takes standerd devaition of
-                // three numbers
+                // <N3, N1> takes 3 standerd devaitions from vector
                 Matrix<N3, N1> Stdevs);
     }
 }
