@@ -174,50 +174,12 @@ public class Swerve_Subsystem extends SubsystemBase {
         PathfindingCommand.warmupCommand().schedule();
     }
 
-    /**
-     * Aim the robot at the target returned by PhotonVision.
-     *
-     * @return A {@link Command} which will run the alignment.
-     */
-    /*
-     * public Command aimAtTarget(Cameras camera)
-     * {
-     * 
-     * return run(() -> {
-     * Optional<PhotonPipelineResult> resultO = camera.getBestResult();
-     * if (resultO.isPresent())
-     * {
-     * var result = resultO.get();
-     * if (result.hasTargets())
-     * {
-     * drive(getTargetSpeeds(0,
-     * 0,
-     * Rotation2d.fromDegrees(result.getBestTarget()
-     * .getYaw()))); // Not sure if this will work, more math may be required.
-     * }
-     * }
-     * });
-     * }
-     */
-
-    /**
-     * Get the path follower with events.
-     *
-     * @param pathName PathPlanner path name.
-     * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
-     */
     public Command getAutonomousCommand(String pathName) {
         // Create a path following command using AutoBuilder. This will also trigger
         // event markers.
         return new PathPlannerAuto(pathName);
     }
 
-    /**
-     * Use PathPlanner Path finding to go to a point on the field.
-     *
-     * @param pose Target {@link Pose2d} to go to.
-     * @return PathFinding command
-     */
     public Command driveToPose(Pose2d pose) {
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
