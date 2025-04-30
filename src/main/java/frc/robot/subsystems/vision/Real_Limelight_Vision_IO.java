@@ -38,7 +38,7 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
         this.rotation_supplier = rotation_supplier;
         //https://docs.limelightvision.io/docs/docs-limelight/apis/complete-networktables-api
         //string keys are already defined by limelight see above
-        orientation_publisher = table.getDoubleArrayTopic("robot orientation set").publish();
+        orientation_publisher = table.getDoubleArrayTopic("robot_orientation_set").publish();
 
         latency_subscriber = table.getDoubleTopic("tl").subscribe(0.0);
         rot_x_subscriber = table.getDoubleTopic("tx").subscribe(0.0);
@@ -69,6 +69,7 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
 
         // for each bit of raw data that has changed since the last call
         for (var raw_data : metatag2Subscriber.readQueue()) {
+            System.out.println(raw_data);
             if (raw_data.value.length == 0)
                 continue;
             for (int i = 1; i < raw_data.value.length; i++){
