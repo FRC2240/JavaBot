@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import java.util.function.Supplier;
 //import edu.wpi.first.math.geometry.Rotation2d;
 
-public class Vision_IO_Real_Limelight implements Vision_IO_Base {
+public class Real_Limelight_Vision_IO implements Base_Vision_IO {
     // supliers store functions so they are more like variables
     private final Supplier<Rotation2d> rotation_supplier;
 
@@ -33,7 +33,7 @@ public class Vision_IO_Real_Limelight implements Vision_IO_Base {
     private final DoubleArraySubscriber metatag1Subscriber;
     private final DoubleArraySubscriber metatag2Subscriber;
 
-    public Vision_IO_Real_Limelight(String name, Supplier<Rotation2d> rotation_supplier) {
+    public Real_Limelight_Vision_IO(String name, Supplier<Rotation2d> rotation_supplier) {
         var table = NetworkTableInstance.getDefault().getTable(name);
         this.rotation_supplier = rotation_supplier;
         orientation_publisher = table.getDoubleArrayTopic("robot orientation set").publish();
@@ -47,7 +47,7 @@ public class Vision_IO_Real_Limelight implements Vision_IO_Base {
 
     // overrides default method
     @Override
-    public void update_inputs(Vision_IO_Base_Input inputs) {
+    public void update_inputs(Base_Vision_IO_Input inputs) {
         // checks controller connection based of off if there was an update in the last 250 ms
         inputs.controller_found = ((RobotController.getFPGATime() - latency_subscriber.getLastChange()) / 1000) < 250;
         // update all inputs

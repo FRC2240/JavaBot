@@ -6,10 +6,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 // anything that uses the interface must provide methods
-public interface Vision_IO_Base {
+public interface Base_Vision_IO {
     // AdvantageKit logging
     @AutoLog
-    public static class Vision_IO_Base_Input {
+    public static class Base_Vision_IO_Input {
         // array of april tag IDs
         public int[] april_tag_IDs = new int[0];
         public pose_estimation_data[] pose_estimation_data = new pose_estimation_data[0];
@@ -38,5 +38,5 @@ public interface Vision_IO_Base {
     }
 
     //creates default method for interface calling object using interface runs method
-    public default void update_inputs(Vision_IO_Base_Input inputs){}
+    public default void update_inputs(Base_Vision_IO_Input inputs){}
 }

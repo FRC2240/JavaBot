@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.Constants;
 //subsystems
-import frc.robot.subsystems.vision.Vision_IO_Base;
-import frc.robot.subsystems.vision.Vision_IO_Real_Limelight;
+import frc.robot.subsystems.vision.Base_Vision_IO;
+import frc.robot.subsystems.vision.Real_Limelight_Vision_IO;
 import frc.robot.subsystems.vision.Vision_Subsystem;
 
 
@@ -22,8 +22,8 @@ public class RobotContainer {
     switch (Constants.current_mode) {
       case REAL:
         vision = new Vision_Subsystem(null, // consumer relies on swerve drive
-            new Vision_IO_Real_Limelight("camera_0", null),
-            new Vision_IO_Real_Limelight("camera_1", null)); // rotation supplier relies on swerve drive
+            new Real_Limelight_Vision_IO("camera_0", null),
+            new Real_Limelight_Vision_IO("camera_1", null)); // rotation supplier relies on swerve drive
 
         break;
     

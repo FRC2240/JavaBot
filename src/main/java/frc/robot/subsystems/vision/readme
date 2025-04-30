@@ -1,0 +1,24 @@
+need to track 
+    limelight temp
+    cpu temp
+    fps
+    ram usage
+
+thing from example left out(come back to)
+    connected to controller
+    reject poses
+    orientation publisher 0.0's
+
+
+
+Must do
+    stdev
+    pose_estimation_data.add in Real limelight IO
+    personal stdev
+
+
+
+
+warning from Asher
+    path planner takes blue side
+    use wpiblue

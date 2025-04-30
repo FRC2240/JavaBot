@@ -3,7 +3,8 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.vision.Vision_IO_Base.Vision_IO_Base_Input;
+import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
+import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
 import frc.robot.subsystems.vision.Vision_Constants;
 
 import java.util.LinkedList;
@@ -27,12 +28,18 @@ public class Vision_Subsystem extends SubsystemBase {
     // empty but can hold an object that implements vision consumer
     private final vision_consumer consumer;
     // empty array that can accept any object implementing the interface
-    private final Vision_IO_Base[] IO_base;
-    private final Vision_IO_Base_Input[] input;
+    private final Base_Vision_IO[] IO_base;
+    private final Base_Vision_IO_Input[] input;
+
+
+
+    //part of my stdev
+    //public double stdev;
+
 
     // elipces means multiple objects of vision_IO_Base class can be passed in so
     // multiple camras
-    public Vision_Subsystem(vision_consumer consumer, Vision_IO_Base... IO_base) {
+    public Vision_Subsystem(vision_consumer consumer, Base_Vision_IO... IO_base) {
         // this passes the private final consumer in
         // so running the method uses parameters to define private final variables which
         // then can't be changed
@@ -40,7 +47,7 @@ public class Vision_Subsystem extends SubsystemBase {
         this.consumer = consumer;
         this.IO_base = IO_base;
 
-        this.input = new Vision_IO_Base_Input[IO_base.length];
+        this.input = new Base_Vision_IO_Input[IO_base.length];
 
     }
 
@@ -101,7 +108,12 @@ public class Vision_Subsystem extends SubsystemBase {
 
                 // calculate stdev
                 double stdev_factor = Math.pow(estimation.average_tag_distance(), 2.0)/estimation.april_tag_count();
+                
 
+
+                // my stdev
+                
+         
 
                 
                 //sends vision data
