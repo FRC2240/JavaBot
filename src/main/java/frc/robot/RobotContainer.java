@@ -16,31 +16,20 @@ import frc.robot.subsystems.vision.Vision_Subsystem;
 
 public class RobotContainer {
   public Swerve_Subsystem m_swerve = new Swerve_Subsystem();
+  public final Vision_Subsystem vision;
 
 
   public RobotContainer() {
 
-    switch (Constants.current_mode) {
-      case REAL:
-      /*
-        vision = new Vision_Subsystem(null, // consumer relies on swerve drive
-            new Real_Limelight_Vision_IO("camera_0", null),
-            new Real_Limelight_Vision_IO("camera_1", null)); // rotation supplier relies on swerve drive
- */
-        break;
     
-      case SIM:
-        
-        break;
-
-      case REPLAY:
-
-        break;
-
-      default:
       
-        break;
-    }
+        vision = new Vision_Subsystem(drive::addVisionMeasurement, // consumer relies on swerve drive
+            new Real_Limelight_Vision_IO("camera_0", drive::getRotation),
+            new Real_Limelight_Vision_IO("camera_1", drive::getRotation)); // rotation supplier relies on swerve drive
+ 
+        
+    
+      
     configureBindings();
   }
 

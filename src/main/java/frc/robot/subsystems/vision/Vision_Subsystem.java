@@ -171,6 +171,6 @@ public class Vision_Subsystem extends SubsystemBase {
                 Pose2d robot_pose,
                 // how much uncertainty there is
                 // <N3, N1> takes 3 standerd devaitions from vector
-                Matrix<N3, N1> Stdevs);
+                Matrix<N3, N1> stdevs);
     }
 }
