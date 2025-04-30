@@ -36,13 +36,15 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
     public Real_Limelight_Vision_IO(String name, Supplier<Rotation2d> rotation_supplier) {
         var table = NetworkTableInstance.getDefault().getTable(name);
         this.rotation_supplier = rotation_supplier;
+        //https://docs.limelightvision.io/docs/docs-limelight/apis/complete-networktables-api
+        //string keys are already defined by limelight see above
         orientation_publisher = table.getDoubleArrayTopic("robot orientation set").publish();
 
-        latency_subscriber = table.getDoubleTopic("latency").subscribe(0.0);
-        rot_x_subscriber = table.getDoubleTopic("rot_x").subscribe(0.0);
-        rot_y_subscriber = table.getDoubleTopic("rot_y").subscribe(0.0);
-        metatag1Subscriber = table.getDoubleArrayTopic("bot_pos").subscribe(new double[] {});
-        metatag2Subscriber = table.getDoubleArrayTopic("bot_pos_orb").subscribe(new double[] {});
+        latency_subscriber = table.getDoubleTopic("tl").subscribe(0.0);
+        rot_x_subscriber = table.getDoubleTopic("tx").subscribe(0.0);
+        rot_y_subscriber = table.getDoubleTopic("ty").subscribe(0.0);
+        metatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
+        metatag2Subscriber = table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
     }
 
     // overrides default method
@@ -60,7 +62,7 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
 
         //publisher sends to network table
         //.get gets stored function
-        orientation_publisher.accept (new double[] {rotation_supplier.get().getDegrees()});
+        orientation_publisher.accept (new double[] {rotation_supplier.get().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0});
         
         // updates network table
         NetworkTableInstance.getDefault().flush();

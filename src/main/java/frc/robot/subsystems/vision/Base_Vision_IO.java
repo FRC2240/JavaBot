@@ -18,7 +18,7 @@ public interface Base_Vision_IO {
     }
 
     // a record is like an array
-    // rot x and y are pitch and yaw i think
+    //rot_x & y refer to the angle to the tag
     public static record rotation(Rotation2d rot_x, Rotation2d rot_y) {}
 
     // data taken every 1/20th of a second to estimate position

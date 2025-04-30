@@ -1,8 +1,9 @@
-need to track 
-    limelight temp
-    cpu temp
-    fps
-    ram usage
+TODO not in template
+    track limelight temp
+    track cpu temp
+    track fps
+    track ram usage
+
 
 thing from example left out(come back to)
     connected to controller
@@ -22,3 +23,4 @@ Must do
 warning from Asher
     path planner takes blue side
     use wpiblue
+
