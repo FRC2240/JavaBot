@@ -28,9 +28,9 @@ public class RobotContainer {
 
     
       
-        vision = new Vision_Subsystem(drive::addVisionMeasurement, // consumer relies on swerve drive
-            new Real_Limelight_Vision_IO("camera_0", drive::getRotation),
-            new Real_Limelight_Vision_IO("camera_1", drive::getRotation)); // rotation supplier relies on swerve drive
+        vision = new Vision_Subsystem(m_swerve::addVisionMeasurement, // consumer relies on swerve drive
+            new Real_Limelight_Vision_IO("camera_0", m_swerve::getHeading),
+            new Real_Limelight_Vision_IO("camera_1", m_swerve::getHeading)); // rotation supplier relies on swerve drive
  
         
     
