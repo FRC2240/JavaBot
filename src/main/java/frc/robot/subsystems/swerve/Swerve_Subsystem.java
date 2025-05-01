@@ -27,7 +27,9 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,6 +47,7 @@ import org.json.simple.parser.ParseException;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
+import swervelib.SwerveInputStream;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -56,9 +59,11 @@ public class Swerve_Subsystem extends SubsystemBase {
 
     private final SwerveDrive swerveDrive;
 
+    private final XboxController driverController;
 
-    public Swerve_Subsystem() {
-        
+    public Swerve_Subsystem(XboxController driverController) {
+        this.driverController = driverController;
+
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -89,20 +94,6 @@ public class Swerve_Subsystem extends SubsystemBase {
         // possible
         setupPathPlanner();
         RobotModeTriggers.autonomous().onTrue(Commands.runOnce(this::zeroGyroWithAlliance));
-    }
-
-    /**
-     * Construct the swerve drive.
-     *
-     * @param driveCfg      SwerveDriveConfiguration for the swerve.
-     * @param controllerCfg Swerve Controller.
-     */
-    public Swerve_Subsystem(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
-        swerveDrive = new SwerveDrive(driveCfg,
-                controllerCfg,
-                Swerve_Constants.MAX_SPEED,
-                new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
-                        Rotation2d.fromDegrees(0)));
     }
 
     @Override
@@ -302,6 +293,31 @@ public class Swerve_Subsystem extends SubsystemBase {
         return run(() -> drive(new ChassisSpeeds(speedInMetersPerSecond, 0, 0)))
                 .until(() -> swerveDrive.getPose().getTranslation()
                         .getDistance(new Translation2d(0, 0)) > distanceInMeters);
+    }
+
+    public Command driveFieldOriented() {
+        SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerveDrive,
+                () -> driverController.getLeftY() * -1,
+                () -> driverController.getLeftX() * -1)
+                .withControllerRotationAxis(driverController::getRightX)
+                .deadband(0.1)
+                .scaleTranslation(0.8)
+                .allianceRelativeControl(true);
+
+        SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(swerveDrive,
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX())
+                .withControllerRotationAxis(() -> driverController.getRawAxis(
+                        2))
+                .deadband(0.1)
+                .scaleTranslation(0.8)
+                .allianceRelativeControl(true);
+
+        if (RobotBase.isSimulation()) {
+            return driveFieldOriented(driveAngularVelocityKeyboard);
+        } else {
+            return driveFieldOriented(driveAngularVelocity);
+        }
     }
 
     /**
