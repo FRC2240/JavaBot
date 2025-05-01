@@ -82,7 +82,7 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
 
                             0, // TODO
 
-                            0, // TODO
+                            0.0, // document
 
                             0, // TODO
 
