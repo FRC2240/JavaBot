@@ -1,7 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.Constants;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
 import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
