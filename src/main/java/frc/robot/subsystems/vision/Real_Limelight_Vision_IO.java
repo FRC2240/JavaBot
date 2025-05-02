@@ -51,7 +51,7 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
     @Override
     public void update_inputs(Base_Vision_IO_Input inputs) {
         // checks controller connection based of off if there was an update in the last 250 ms
-        inputs.controller_found = ((RobotController.getFPGATime() - latency_subscriber.getLastChange()) / 1000) < 250;
+        //inputs.controller_found = ((RobotController.getFPGATime() - latency_subscriber.getLastChange()) / 1000) < 250; causing issue
         // update all inputs
         inputs.angle_to_tag = new rotation(Rotation2d.fromDegrees(rot_x_subscriber.get()), Rotation2d.fromDegrees(rot_y_subscriber.getLastChange()));
 
