@@ -7,10 +7,14 @@ import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
 import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
 import frc.robot.subsystems.vision.Vision_Constants;
 
+import static frc.robot.subsystems.vision.Vision_Constants.*;
+
+import java.io.ObjectInputStream.GetField;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -31,11 +35,8 @@ public class Vision_Subsystem extends SubsystemBase {
     private final Base_Vision_IO[] IO_base;
     private final Base_Vision_IO_Input[] input;
 
-
-
-    //part of my stdev
-    //public double stdev;
-
+    // part of my stdev
+    // public double stdev;
 
     // elipces means multiple objects of vision_IO_Base class can be passed in so
     // multiple camras
@@ -93,8 +94,13 @@ public class Vision_Subsystem extends SubsystemBase {
                 // potential point of failure
                 boolean reject_pose = estimation.april_tag_count() == 0 // rejects estimates made without tags
                         || (estimation.april_tag_count() == 1
-                                && estimation.uncertainty() > Vision_Constants.max_uncertainty);
-                        || Math.abs(estimation.position().getZ()) > 
+                                && estimation.uncertainty() > Vision_Constants.max_uncertainty)
+                        || (Math.abs(estimation.position().getX())  > Vision_Constants.max_z_error)
+
+                        || ((estimation.position().getX() > 0.0)
+                            &&  (estimation.position().getX() < april_tag_layout.getFieldLength()))
+                        || ((estimation.position().getY() > 0.0) 
+                            && (estimation.position().getY() < april_tag_layout.getFieldWidth()));
 
                 robot_poses.add(estimation.position()); // stores all robot positions for a camera
                 if (!reject_pose) {
