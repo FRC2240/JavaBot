@@ -279,23 +279,16 @@ public class Swerve_Subsystem extends SubsystemBase {
                 .forEach(it -> it.setAngle(0.0)));
     }
 
-    /**
-     * Returns a Command that drives the swerve drive to a specific distance at a
-     * given speed.
-     *
-     * @param distanceInMeters       the distance to drive in meters
-     * @param speedInMetersPerSecond the speed at which to drive in meters per
-     *                               second
-     * @return a Command that drives the swerve drive to a specific distance at a
-     *         given speed
-     */
+
+    // Drives to a certain distance at a certain speed
     public Command driveToDistanceCommand(double distanceInMeters, double speedInMetersPerSecond) {
         return run(() -> drive(new ChassisSpeeds(speedInMetersPerSecond, 0, 0)))
                 .until(() -> swerveDrive.getPose().getTranslation()
                         .getDistance(new Translation2d(0, 0)) > distanceInMeters);
     }
 
-    public Command driveFieldOriented() {
+    // Drives with a controller
+    public Command drive_controlled_command() {
         SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerveDrive,
                 () -> driverController.getLeftY() * -1,
                 () -> driverController.getLeftX() * -1)
@@ -653,7 +646,7 @@ public class Swerve_Subsystem extends SubsystemBase {
     }
 
     public void addVisionMeasurement(double timestamp, Pose2d robot_pose, Matrix<N3, N1> stdevs) {
-        swerveDrive.addVisionMeasurement(robot_pose, timestamp);
+        swerveDrive.addVisionMeasurement(robot_pose, timestamp, stdevs);
     }
 
     /**
