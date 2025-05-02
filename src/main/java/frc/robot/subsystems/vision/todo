@@ -1,0 +1,34 @@
+delete read me and this and move to notes app
+find error (I think bc I never use controller for is connected so fgatimestamp no work)
+fix error as possible
+push fix if possible
+
+finish as much as possible w/o order and stdev
+    reject poses
+    hypothetical photon as possible
+    connected to controller
+
+find order/figure out how to log
+
+log(have an Alert)
+    camera temp 
+    cpu temp
+    ram usage
+    fps
+
+create 3 branches 
+    stdev as in template
+    stdev take from limelight
+    no stdev
+
+
+
+
+Test
+
+
+
+warning from Asher
+    path planner takes blue side
+    use wpiblue
+    avoid over complexity

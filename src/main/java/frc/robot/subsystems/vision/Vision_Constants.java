@@ -15,5 +15,7 @@ public class Vision_Constants {
     public static Transform3d camera_1_pos = new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, 0.0)); // TBD
 
     public static double max_uncertainty = 0.0; // TBD
+    public static double max_z_error = 0.25; //TBD
+
     //example has a max z error doesn't seem neceary
 }

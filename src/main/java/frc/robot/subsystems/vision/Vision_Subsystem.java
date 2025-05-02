@@ -94,6 +94,7 @@ public class Vision_Subsystem extends SubsystemBase {
                 boolean reject_pose = estimation.april_tag_count() == 0 // rejects estimates made without tags
                         || (estimation.april_tag_count() == 1
                                 && estimation.uncertainty() > Vision_Constants.max_uncertainty);
+                        || Math.abs(estimation.position().getZ()) > 
 
                 robot_poses.add(estimation.position()); // stores all robot positions for a camera
                 if (!reject_pose) {
@@ -117,11 +118,11 @@ public class Vision_Subsystem extends SubsystemBase {
 
                 
                 //sends vision data
-                /*
+                /* 
                 consumer.accepts(
                     estimation.position(),
                     estimation.timestamp(),
-                    temp
+                    //temp
                 );
                 */
 
