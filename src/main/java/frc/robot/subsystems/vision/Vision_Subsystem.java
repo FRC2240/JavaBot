@@ -16,7 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-//import edu.wpi.first.wpilibj.Alert; disconnected logging
+//import edu.wpi.first.wpilibj.Alert; 
 
 import org.littletonrobotics.junction.Logger;
 
@@ -29,6 +29,22 @@ public class Vision_Subsystem extends SubsystemBase {
     private final Base_Vision_IO[] IO_base;
     private final Base_Vision_IO_Input[] input;
 
+
+
+
+
+
+    //type with issue
+
+    //private final VisionIOInputsAutoLogged[] inputs;
+
+
+
+
+
+
+    //private final Alert[] alerts;
+
     // elipces means multiple objects of vision_IO_Base class can be passed in so
     // multiple camras
     public Vision_Subsystem(vision_consumer consumer, Base_Vision_IO... IO_base) {
@@ -40,6 +56,9 @@ public class Vision_Subsystem extends SubsystemBase {
         this.IO_base = IO_base;
 
         this.input = new Base_Vision_IO_Input[IO_base.length];
+
+
+        //this.alerts = new Alert[IO_base.length];
 
     }
 
