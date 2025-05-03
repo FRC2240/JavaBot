@@ -1,22 +1,16 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.Constants;
-import frc.robot.Robot;
-import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
-import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
-import frc.robot.subsystems.vision.Vision_Constants;
-
 import static frc.robot.subsystems.vision.Vision_Constants.*;
 
-import java.io.ObjectInputStream.GetField;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.Base_Vision_IO.Base_Vision_IO_Input;
+import frc.robot.subsystems.vision.Base_Vision_IO.vision_configuration_type;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -25,7 +19,7 @@ import edu.wpi.first.math.numbers.N3;
 //import edu.wpi.first.wpilibj.Alert; disconnected logging
 
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+
 
 public class Vision_Subsystem extends SubsystemBase {
 
@@ -34,9 +28,6 @@ public class Vision_Subsystem extends SubsystemBase {
     // empty array that can accept any object implementing the interface
     private final Base_Vision_IO[] IO_base;
     private final Base_Vision_IO_Input[] input;
-
-    // part of my stdev
-    // public double stdev;
 
     // elipces means multiple objects of vision_IO_Base class can be passed in so
     // multiple camras
@@ -95,12 +86,12 @@ public class Vision_Subsystem extends SubsystemBase {
                 boolean reject_pose = estimation.april_tag_count() == 0 // rejects estimates made without tags
                         || (estimation.april_tag_count() == 1
                                 && estimation.uncertainty() > Vision_Constants.max_uncertainty)
-                        || (Math.abs(estimation.position().getX())  > Vision_Constants.max_z_error)
+                        || (Math.abs(estimation.position().getX()) > Vision_Constants.max_z_error)
 
                         || ((estimation.position().getX() > 0.0)
-                            &&  (estimation.position().getX() < april_tag_layout.getFieldLength()))
-                        || ((estimation.position().getY() > 0.0) 
-                            && (estimation.position().getY() < april_tag_layout.getFieldWidth()));
+                                && (estimation.position().getX() < april_tag_layout.getFieldLength()))
+                        || ((estimation.position().getY() > 0.0)
+                                && (estimation.position().getY() < april_tag_layout.getFieldWidth()));
 
                 robot_poses.add(estimation.position()); // stores all robot positions for a camera
                 if (!reject_pose) {
@@ -114,39 +105,42 @@ public class Vision_Subsystem extends SubsystemBase {
                 }
 
                 // calculate stdev
-                double stdev_factor = Math.pow(estimation.average_tag_distance(), 2.0)/estimation.april_tag_count();
-                
+                // they use a modified stdev that is altered based off of conditions
+                // "automatically scaling"
+                double stdev_factor = Math.pow(estimation.average_tag_distance(), 2.0) / estimation.april_tag_count();
+                double linear_stdev = linear_stdev_baseline * stdev_factor;
+                double angular_stdev = angular_stdev_baseline * stdev_factor;
 
+                if (estimation.type() == vision_configuration_type.MEGATAG_2) {
+                    linear_stdev *= linear_stdev_megatag2_factor;
+                    angular_stdev *= angular_stdev_megatag2_factor;
+                }
+                if (i < camera_stdev_factors.length) {
+                    linear_stdev *= camera_stdev_factors[i];
+                    angular_stdev *= camera_stdev_factors[i];
+                }
 
-                // my stdev
-                
-         
-
-                
-                //sends vision data
-                /* 
+                // sends vision data
                 consumer.accepts(
-                    estimation.position(),
-                    estimation.timestamp(),
-                    //temp
-                );
-                */
+                        estimation.timestamp(),
+                        estimation.position().toPose2d(),
+                        VecBuilder.fill(linear_stdev, linear_stdev, angular_stdev));
 
             }
 
-            //logs data by camera
+            // logs data by camera
             Logger.recordOutput(
-          "Vision/Camera" + Integer.toString(i) + "/Tag_positions",
-          tag_poses.toArray(new Pose3d[tag_poses.size()]));
-      Logger.recordOutput(
-          "Vision/Camera" + Integer.toString(i) + "/Robot_positions",
-          robot_poses.toArray(new Pose3d[robot_poses.size()]));
-      Logger.recordOutput(
-          "Vision/Camera" + Integer.toString(i) + "/Accepted_position",
-          accepted_poses.toArray(new Pose3d[accepted_poses.size()]));
-      Logger.recordOutput(
-          "Vision/Camera" + Integer.toString(i) + "/Rejected_positions",
-          rejected_poses.toArray(new Pose3d[rejected_poses.size()]));
+                    "Vision/Camera" + Integer.toString(i) + "/Tag_positions",
+                    tag_poses.toArray(new Pose3d[tag_poses.size()]));
+            Logger.recordOutput(
+                    "Vision/Camera" + Integer.toString(i) + "/Robot_positions",
+                    robot_poses.toArray(new Pose3d[robot_poses.size()]));
+            Logger.recordOutput(
+                    "Vision/Camera" + Integer.toString(i) + "/Accepted_position",
+                    accepted_poses.toArray(new Pose3d[accepted_poses.size()]));
+            Logger.recordOutput(
+                    "Vision/Camera" + Integer.toString(i) + "/Rejected_positions",
+                    rejected_poses.toArray(new Pose3d[rejected_poses.size()]));
 
             // stores data for each camera
             all_tag_poses.addAll(tag_poses);

@@ -32,8 +32,8 @@ public interface Base_Vision_IO {
         vision_configuration_type type) {}
 
     public static enum vision_configuration_type {
-        METATAG_1,
-        METATAG_2,
+        MEGATAG_1,
+        MEGATAG_2,
         PHOTOVISION
     }
 

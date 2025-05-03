@@ -30,8 +30,8 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
     private final DoubleSubscriber latency_subscriber;
     private final DoubleSubscriber rot_x_subscriber;
     private final DoubleSubscriber rot_y_subscriber;
-    private final DoubleArraySubscriber metatag1Subscriber;
-    private final DoubleArraySubscriber metatag2Subscriber;
+    private final DoubleArraySubscriber megatag1Subscriber;
+    private final DoubleArraySubscriber megatag2Subscriber;
 
     public Real_Limelight_Vision_IO(String name, Supplier<Rotation2d> rotation_supplier) {
         var table = NetworkTableInstance.getDefault().getTable(name);
@@ -43,8 +43,8 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
         latency_subscriber = table.getDoubleTopic("tl").subscribe(0.0);
         rot_x_subscriber = table.getDoubleTopic("tx").subscribe(0.0);
         rot_y_subscriber = table.getDoubleTopic("ty").subscribe(0.0);
-        metatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
-        metatag2Subscriber = table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
+        megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
+        megatag2Subscriber = table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
     }
 
     // overrides default method
@@ -68,7 +68,7 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
         NetworkTableInstance.getDefault().flush();
 
         // for each bit of raw data that has changed since the last call
-        for (var raw_data : metatag2Subscriber.readQueue()) {
+        for (var raw_data : megatag2Subscriber.readQueue()) {
             System.out.println(raw_data);
             if (raw_data.value.length == 0)
                 continue;
@@ -90,7 +90,7 @@ public class Real_Limelight_Vision_IO implements Base_Vision_IO {
 
                             null, // TODO
 
-                            vision_configuration_type.METATAG_2));
+                            vision_configuration_type.MEGATAG_2));
 
         }
 
