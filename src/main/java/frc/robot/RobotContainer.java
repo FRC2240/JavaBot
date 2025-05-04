@@ -25,6 +25,7 @@ public class RobotContainer {
   public CommandXboxController operatorController = new CommandXboxController(1);
 
   public Swerve_Subsystem m_swerve = new Swerve_Subsystem();
+  public Wrist_Commands wrist_commands = new Wrist_Commands();
 
   public RobotContainer() {
     // Set up pathplanner
@@ -50,18 +51,15 @@ public class RobotContainer {
     final Trigger button_right_trigger = driverController.rightTrigger();
 
     BiConsumer<Trigger, Boolean> GO_TO_A = (trigger, bool) -> {
-      final Wrist_Commands wrist_commands = new Wrist_Commands();
       trigger.onTrue(wrist_commands.command_go_to_A());
     };
 
     BiConsumer<Trigger, Boolean> GO_TO_B = (trigger, bool) -> {
-      final Wrist_Commands wrist_commands = new Wrist_Commands();
-      trigger.onTrue(wrist_commands.command_go_to_A());
+      trigger.onTrue(wrist_commands.command_go_to_B());
     };
 
     BiConsumer<Trigger, Boolean> GRABBER_STOP = (trigger, bool) -> {
-      final Wrist_Commands wrist_commands = new Wrist_Commands();
-      trigger.onTrue(wrist_commands.command_go_to_A());
+      trigger.onTrue(wrist_commands.command_grabber_stop());
     };
 
     GO_TO_A.accept(button_A, true);

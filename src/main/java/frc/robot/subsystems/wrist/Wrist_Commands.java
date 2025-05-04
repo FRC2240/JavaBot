@@ -9,13 +9,13 @@ public class Wrist_Commands implements WRIST_IO {
 
     @Override
     public void go_to_A_override() {
-        wrist.grabber_stop();
+        wrist.go_to_A();
 
     }
 
     @Override
     public void go_to_b_override() {
-        wrist.grabber_stop();
+        wrist.go_to_B();
 
     }
 
