@@ -11,10 +11,10 @@ import frc.robot.utils.Motor_Template;
 
 public class Wrist_Subsystem {
     // Motors
-    final static int WRIST_ID = 1;
+    final static int WRIST_ID = 7;
     final static com.ctre.phoenix6.hardware.TalonFX m_wrist = new TalonFX(WRIST_ID);
 
-    final static int GRABBER_ID = 1;
+    final static int GRABBER_ID = 24;
     final static com.ctre.phoenix6.hardware.TalonFX m_grabber = new TalonFX(GRABBER_ID);
 
     // Motor Template
@@ -23,23 +23,23 @@ public class Wrist_Subsystem {
 
     // Positions
     static final Angle Pos_A = Angle.ofBaseUnits(180, Degrees);
-    static final AngularVelocity Vel_A = AngularVelocity.ofBaseUnits(0.05, RotationsPerSecond);
+    static final AngularVelocity Vel_A = AngularVelocity.ofBaseUnits(1, RotationsPerSecond);
 
-    static final Angle Pos_B = Angle.ofBaseUnits(360, Degrees);
-    static final AngularVelocity Vel_B = AngularVelocity.ofBaseUnits(10, RotationsPerSecond);
+    static final Angle Pos_B = Angle.ofBaseUnits(3600, Degrees);
+    static final AngularVelocity Vel_B = AngularVelocity.ofBaseUnits(100, RotationsPerSecond);
 
     // Go to Pos
     public void go_to_A() {
         Wrist.set_position(Pos_A);
-        Grabber.set_velocity(Vel_A);
+        Grabber.set_velocity(Vel_A,1);
     }
 
     public void go_to_B() {
         Wrist.set_position(Pos_B);
-        Grabber.set_velocity(Vel_B);
+        Grabber.set_velocity(Vel_B,10);
     }
 
     public void grabber_stop() {
-        Grabber.set_velocity(AngularVelocity.ofBaseUnits(0, RotationsPerSecond));
+        Grabber.set_velocity(AngularVelocity.ofBaseUnits(0, RotationsPerSecond),0);
     }
 }

@@ -16,6 +16,7 @@ public class Motor_Template {
 
     public Motor_Template(TalonFX motor) {
         m_motor = motor;
+        m_motor.setVoltage(0);
     }
 
     // Position
@@ -40,8 +41,9 @@ public class Motor_Template {
         return m_motor.getVelocity();
     }
 
-    public void set_velocity(AngularVelocity velocity) {
-        m_motor.setControl(control_request.withVelocity(velocity.plus(mod_velocity)));
+    public void set_velocity(AngularVelocity velocity, double voltage) {
+        m_motor.setControl(VTC_FOC.withVelocity(velocity.plus(mod_velocity)));
+        m_motor.setVoltage(voltage);
     }
 
     public void velocity_modifier(AngularVelocity value) {
@@ -49,5 +51,6 @@ public class Motor_Template {
     }
 
     // Private Variables
-    private static com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC control_request = new com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC(0);
+    final static com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC VTC_FOC = new com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC(0);
+    final static com.ctre.phoenix6.controls.PositionDutyCycle POS_DC = new com.ctre.phoenix6.controls.PositionDutyCycle(0);
 }
