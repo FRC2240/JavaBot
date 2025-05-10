@@ -4,6 +4,8 @@ package frc.robot.utils;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
@@ -17,7 +19,7 @@ public class Motor_Template {
     }
 
     // Position
-    public Angle mod_angle;
+    public Angle mod_angle = Angle.ofBaseUnits(0, Degrees);
 
     public StatusSignal<Angle> get_position() {
         return m_motor.getPosition();
@@ -32,7 +34,7 @@ public class Motor_Template {
     }
 
     // Velocity
-    public AngularVelocity mod_velocity;
+    public AngularVelocity mod_velocity = AngularVelocity.ofBaseUnits(0, RotationsPerSecond);
 
     public StatusSignal<AngularVelocity> get_velocity() {
         return m_motor.getVelocity();
