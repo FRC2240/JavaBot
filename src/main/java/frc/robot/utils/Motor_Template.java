@@ -49,5 +49,5 @@ public class Motor_Template {
     }
 
     // Private Variables
-    private static com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC control_request;
+    private static com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC control_request = new com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC(0);
 }
