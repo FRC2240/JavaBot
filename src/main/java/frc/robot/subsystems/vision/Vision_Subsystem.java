@@ -27,7 +27,7 @@ public class Vision_Subsystem extends SubsystemBase {
     private final vision_consumer consumer;
     // empty array that can accept any object implementing the interface
     private final Base_Vision_IO[] IO_base;
-    private final Base_Vision_IO_Input[] input;
+    
 
 
 
@@ -36,7 +36,7 @@ public class Vision_Subsystem extends SubsystemBase {
 
     //type with issue
 
-    //private final VisionIOInputsAutoLogged[] inputs;
+    private final Base_Vision_IO_InputAutoLogged[] inputs;
 
 
 
@@ -55,7 +55,10 @@ public class Vision_Subsystem extends SubsystemBase {
         this.consumer = consumer;
         this.IO_base = IO_base;
 
-        this.input = new Base_Vision_IO_Input[IO_base.length];
+        this.inputs = new Base_Vision_IO_InputAutoLogged[IO_base.length];
+        for (int i = 0; i < inputs.length; i++) {
+            inputs[i] = new Base_Vision_IO_InputAutoLogged();
+        }
 
 
         //this.alerts = new Alert[IO_base.length];
@@ -63,14 +66,14 @@ public class Vision_Subsystem extends SubsystemBase {
     }
 
     public Rotation2d getTargetX(int cameraIndex) {
-        return input[cameraIndex].angle_to_tag.rot_x();
+        return inputs[cameraIndex].angle_to_tag.rot_x();
     }
 
     // updates input and logs for each camera
     @Override
     public void periodic() {
         for (int i = 0; i < IO_base.length; i++) {
-            IO_base[i].update_inputs(input[i]);
+            IO_base[i].update_inputs(inputs[i]);
             // Logger.processInputs("Vision", input[i]);
         }
 
@@ -89,7 +92,7 @@ public class Vision_Subsystem extends SubsystemBase {
             List<Pose3d> rejected_poses = new LinkedList<>();
 
             // each tag seen ID appends its position to tag poses
-            for (int tag_ID : input[i].april_tag_IDs) {
+            for (int tag_ID : inputs[i].april_tag_IDs) {
                 var tag_pose = Vision_Constants.april_tag_layout.getTagPose(tag_ID);
                 if (tag_pose.isPresent()) {
                     tag_poses.add(tag_pose.get());
@@ -97,7 +100,7 @@ public class Vision_Subsystem extends SubsystemBase {
             }
 
             //
-            for (var estimation : input[i].pose_estimation_data) {
+            for (var estimation : inputs[i].pose_estimation_data) {
                 // confirms estimation data is with in thresholds
                 // example has many unecissary seeming conditions
                 // come back to
@@ -105,11 +108,11 @@ public class Vision_Subsystem extends SubsystemBase {
                 boolean reject_pose = estimation.april_tag_count() == 0 // rejects estimates made without tags
                         || (estimation.april_tag_count() == 1
                                 && estimation.uncertainty() > Vision_Constants.max_uncertainty)
-                        || (Math.abs(estimation.position().getX()) > Vision_Constants.max_z_error)
+                        || (Math.abs(estimation.position().getZ()) > Vision_Constants.max_z_error)
 
-                        || ((estimation.position().getX() > 0.0)
+                        || !((estimation.position().getX() > 0.0)
                                 && (estimation.position().getX() < april_tag_layout.getFieldLength()))
-                        || ((estimation.position().getY() > 0.0)
+                        || !((estimation.position().getY() > 0.0)
                                 && (estimation.position().getY() < april_tag_layout.getFieldWidth()));
 
                 robot_poses.add(estimation.position()); // stores all robot positions for a camera
@@ -176,9 +179,9 @@ public class Vision_Subsystem extends SubsystemBase {
         Logger.recordOutput("Vision/Summary/Robot_positions",
                 all_robot_poses.toArray(new Pose2d[all_tag_poses.size()]));
         Logger.recordOutput("Vision/Summary/Accepted_positions",
-                all_accepted_poses.toArray(new Pose2d[all_tag_poses.size()]));
+                all_accepted_poses.toArray(new Pose2d[all_tag_poses.size()]));  //TODO all pose2d
         Logger.recordOutput("Vision/Summary/Rejected_positions",
-                all_rejected_poses.toArray(new Pose2d[all_tag_poses.size()]));
+                all_rejected_poses.toArray(new Pose2d[all_tag_poses.size()])); 
     }
 
     // marks a function interface
